@@ -94,11 +94,16 @@ package object parsers {
 
   // Handling spaces
 
-  def token[A](p: Parser[A]): Parser[A] = ???
+  def token[A](p: Parser[A]): Parser[A] =
+    for {
+      _ <- space
+      v <- p
+      _ <- space
+    } yield v
 
-  val identifier: Parser[String] = ???
+  val identifier: Parser[String] = token(ident)
 
-  val natural: Parser[Int] = ???
+  val natural: Parser[Int] = token(nat)
 
-  def symbol(s: String): Parser[String] = ???
+  def symbol(s: String): Parser[String] = token(string(s))
 }

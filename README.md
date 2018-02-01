@@ -2,4 +2,4 @@
 
 based on "Programming in Haskell" by Graham Hutton.
 
-## Part 4 - Handling spaces
+## Part 5 - Arithmetic expressions
