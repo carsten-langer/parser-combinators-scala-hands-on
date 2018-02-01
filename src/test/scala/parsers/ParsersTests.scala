@@ -52,7 +52,6 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
     }
   }
 
-
   property("digit should succeed on numeric char") {
     forAll(Gen.numChar, Gen.alphaNumStr) { (c, out) =>
       digit(s"$c$out") shouldEqual Some(c.toInt, out)
@@ -201,4 +200,30 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
     "   foo".parse(space) shouldEqual Some((), "foo")
   }
 
+  property("token") {
+    forAll(arbitrary[String]) { str =>
+      s"   $str   foo".parse(token(string(str))) shouldEqual Some(str, "foo")
+      s"   ${str}foo".parse(token(string(str))) shouldEqual Some(str, "foo")
+      s"$str foo".parse(token(string(str))) shouldEqual Some(str, "foo")
+    }
+  }
+
+  property("token fail") {
+    forAll(Gen.alphaUpperStr) { str =>
+      str.parse(token(lower)) shouldEqual None
+    }
+  }
+
+  property("identifier") {
+    " someIdentifier foo".parse(identifier) shouldEqual Some("someIdentifier",
+                                                             "foo")
+  }
+
+  property("natural") {
+    "  123 foo".parse(natural) shouldEqual Some(123, "foo")
+  }
+
+  property("symbol") {
+    "  foobar foo".parse(symbol("foobar")) shouldEqual Some("foobar", "foo")
+  }
 }

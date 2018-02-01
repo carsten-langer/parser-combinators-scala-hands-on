@@ -27,7 +27,7 @@ package object parsers {
         input.parse(p) match {
           case None           => fail(input)
           case Some((v, out)) => out.parse(f(v))
-        }
+      }
 
     def map[B](f: A => B): Parser[B] = p.flatMap(v => succeed(f(v)))
 
@@ -36,7 +36,7 @@ package object parsers {
         input.parse(p) match {
           case None             => input.parse(other)
           case result @ Some(_) => result
-        }
+      }
   }
 
   // Derived primitives
@@ -91,4 +91,14 @@ package object parsers {
     for {
       _ <- many(sat(_.isWhitespace))
     } yield ()
+
+  // Handling spaces
+
+  def token[A](p: Parser[A]): Parser[A] = ???
+
+  val identifier: Parser[String] = ???
+
+  val natural: Parser[Int] = ???
+
+  def symbol(s: String): Parser[String] = ???
 }
