@@ -2,4 +2,4 @@
 
 based on "Programming in Haskell" by Graham Hutton.
 
-## Part 1 - Basic parsers
+## Part 3 - Derived primitives
