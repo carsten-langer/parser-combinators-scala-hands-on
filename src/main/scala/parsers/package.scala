@@ -39,4 +39,31 @@ package object parsers {
         }
   }
 
+  // Derived primitives
+
+  def sat(predicate: Char => Boolean): Parser[Char] = ???
+
+  val digit: Parser[Char] = ???
+
+  val lower: Parser[Char] = ???
+
+  val upper: Parser[Char] = ???
+
+  val letter: Parser[Char] = ???
+
+  val alphaNum: Parser[Char] = ???
+
+  def char(c: Char): Parser[Char] = ???
+
+  def string(str: String): Parser[String] = ???
+
+  def many[A](p: Parser[A]): Parser[List[A]] = ???
+
+  def many1[A](p: Parser[A]): Parser[List[A]] = ???
+
+  val ident: Parser[String] = ???
+
+  val nat: Parser[Int] = ???
+
+  val space: Parser[Unit] = ???
 }
