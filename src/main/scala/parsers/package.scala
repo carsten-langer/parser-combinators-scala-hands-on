@@ -22,11 +22,21 @@ package object parsers {
   // Sequencing and choice
 
   implicit class ParserCombinators[A](val p: Parser[A]) extends AnyVal {
-    def flatMap[B](f: A => Parser[B]): Parser[B] = ???
+    def flatMap[B](f: A => Parser[B]): Parser[B] =
+      input =>
+        input.parse(p) match {
+          case None           => fail(input)
+          case Some((v, out)) => out.parse(f(v))
+        }
 
-    def map[B](f: A => B): Parser[B] = ???
+    def map[B](f: A => B): Parser[B] = p.flatMap(v => succeed(f(v)))
 
-    def +++(other: Parser[A]): Parser[A] = ???
+    def +++(other: Parser[A]): Parser[A] =
+      input =>
+        input.parse(p) match {
+          case None             => input.parse(other)
+          case result @ Some(_) => result
+        }
   }
 
 }
