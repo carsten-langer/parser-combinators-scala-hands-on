@@ -41,29 +41,54 @@ package object parsers {
 
   // Derived primitives
 
-  def sat(predicate: Char => Boolean): Parser[Char] = ???
+  def sat(predicate: Char => Boolean): Parser[Char] =
+    for {
+      c <- item
+      r <- if (predicate(c)) succeed(c) else fail
+    } yield r
 
-  val digit: Parser[Char] = ???
+  val digit: Parser[Char] = sat(_.isDigit)
 
-  val lower: Parser[Char] = ???
+  val lower: Parser[Char] = sat(_.isLower)
 
-  val upper: Parser[Char] = ???
+  val upper: Parser[Char] = sat(_.isUpper)
 
-  val letter: Parser[Char] = ???
+  val letter: Parser[Char] = sat(_.isLetter)
 
-  val alphaNum: Parser[Char] = ???
+  val alphaNum: Parser[Char] = sat(_.isLetterOrDigit)
 
-  def char(c: Char): Parser[Char] = ???
+  def char(c: Char): Parser[Char] = sat(_ == c)
 
-  def string(str: String): Parser[String] = ???
+  def string(str: String): Parser[String] =
+    if (str.isEmpty) succeed("")
+    else
+      for {
+        _ <- char(str.charAt(0))
+        _ <- string(str.substring(1))
+      } yield str
 
-  def many[A](p: Parser[A]): Parser[List[A]] = ???
+  def many[A](p: Parser[A]): Parser[List[A]] =
+    many1(p) +++ succeed(Nil)
 
-  def many1[A](p: Parser[A]): Parser[List[A]] = ???
+  def many1[A](p: Parser[A]): Parser[List[A]] =
+    for {
+      head <- p
+      tail <- many(p)
+    } yield head :: tail
 
-  val ident: Parser[String] = ???
+  val ident: Parser[String] =
+    for {
+      x <- lower
+      xs <- many(alphaNum)
+    } yield (x :: xs).mkString
 
-  val nat: Parser[Int] = ???
+  val nat: Parser[Int] =
+    for {
+      xs <- many1(digit)
+    } yield xs.mkString.toInt
 
-  val space: Parser[Unit] = ???
+  val space: Parser[Unit] =
+    for {
+      _ <- many(sat(_.isWhitespace))
+    } yield ()
 }
