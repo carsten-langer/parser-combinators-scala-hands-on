@@ -1,6 +1,6 @@
 # A parser combinator hands on
 
-based on "Programming in Haskell" by Graham Hutton.
+based on [Programming in Haskell](http://www.cs.nott.ac.uk/~pszgmh/pih.html) by Graham Hutton.
 
 Start by checking out branch `part1`.
 
