@@ -3,7 +3,7 @@ package parsers
 object ArithmeticExpressions {
 
   /*
-   grammer:
+   grammar:
 
    expr ::= term (+ expr | \epsilon) \
    term ::= factor (* term | \epsilon) \
