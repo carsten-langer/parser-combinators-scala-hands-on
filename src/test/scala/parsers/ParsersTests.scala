@@ -12,7 +12,7 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("succeed should always succeed with the result value v") {
     forAll(nonEmptyString, arbitrary[Int]) { (input, v) =>
-      parsers.succeed(v)(input) shouldEqual Some(v, input)
+      parsers.succeed(v)(input) shouldEqual Some((v, input))
     }
   }
 
@@ -24,7 +24,7 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("item should succeed with first char for non empty inputs") {
     forAll(nonEmptyString) { input =>
-      item(input) shouldEqual Some(input.charAt(0), input.substring(1))
+      item(input) shouldEqual Some((input.charAt(0), input.substring(1)))
     }
   }
 
