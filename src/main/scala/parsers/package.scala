@@ -46,9 +46,24 @@ package object parsers {
     */
   def item: Parser[Char] = input => input.headOption.map((_, input.tail))
 
-  def parse[A](p: Parser[A], input: String): Option[(A, String)] = p(input)
+  private def parse[A](p: Parser[A], input: String): Option[(A, String)] =
+    p(input)
 
   implicit class Parse(val input: String) extends AnyVal {
+
+    /** Syntax for applying a parser to an input string.
+      *
+      * Usage example:
+      *
+      * {{{
+      *   val p: Parser[Char] = ???
+      *   "input_string".parse(p)
+      * }}}
+      *
+      * @param p the parser
+      * @tparam A the type of the parser
+      * @return an optional pair of a result value of type `A` and an output string
+      */
     def parse[A](p: Parser[A]): Option[(A, String)] = parsers.parse(p, input)
   }
 
