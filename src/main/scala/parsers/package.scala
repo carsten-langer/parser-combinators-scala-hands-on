@@ -34,15 +34,15 @@ package object parsers {
     */
   def fail: Parser[Nothing] = ???
 
-  /** The parser `item` fails if the input string is empty or otherwise succeeds with the first character of the input string.
+  /** The parser `anyChar` fails if the input string is empty or otherwise succeeds with the first character of the input string.
     *
     * Usage example:
     *
     * {{{
-    *   item("input_string") == Some(('i', "nput_string"))
+    *   anyChar("input_string") == Some(('i', "nput_string"))
     * }}}
     *
     * @return a parser of type `Char`
     */
-  def item: Parser[Char] = ???
+  def anyChar: Parser[Char] = ???
 }

@@ -22,13 +22,13 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
     }
   }
 
-  property("item should succeed with first char for non empty inputs") {
+  property("anyChar should succeed with first char for non empty inputs") {
     forAll(nonEmptyString) { input =>
-      item(input) shouldEqual Some((input.charAt(0), input.substring(1)))
+      anyChar(input) shouldEqual Some((input.charAt(0), input.substring(1)))
     }
   }
 
-  property("item should fail if input is empty") {
-    item("") shouldEqual None
+  property("anyChar should fail if input is empty") {
+    anyChar("") shouldEqual None
   }
 }
