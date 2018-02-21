@@ -26,7 +26,7 @@ class ListParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("nonEmptyIntList should parse valid lists correctly") {
     forAll(validLists) { (input: String, expected: List[Int]) =>
-      val Some((actual, rest)) = input.parse(nonEmptyIntList)
+      val Some((actual, rest)) = nonEmptyIntList(input)
       actual shouldEqual expected
       rest shouldBe ""
     }
@@ -34,7 +34,7 @@ class ListParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("nonEmptyIntList should fail with invalid lists") {
     forAll(invalidLists) { input =>
-      input.parse(nonEmptyIntList) shouldEqual None
+      nonEmptyIntList(input) shouldEqual None
     }
   }
 }

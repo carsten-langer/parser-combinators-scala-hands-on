@@ -18,9 +18,9 @@ object ArithmeticExpressions {
   lazy val factor: Parser[Int] = ???
 
   def eval(input: String): Either[String, Int] =
-    input.parse(expr) match {
-      case Some((n, "")) => Right(n)
+    expr(input) match {
+      case Some((n, ""))  => Right(n)
       case Some((_, out)) => Left(s"unconsumed input: $out")
-      case None => Left("invalid input")
+      case None           => Left("invalid input")
     }
 }
