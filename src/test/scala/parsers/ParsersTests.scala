@@ -27,19 +27,19 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("item should succeed with first char for non empty inputs") {
     forAll(nonEmptyString) { input =>
-      item(input) shouldEqual Some(input.charAt(0), input.substring(1))
+      anyChar(input) shouldEqual Some(input.charAt(0), input.substring(1))
     }
   }
 
   property("item should fail if input is empty") {
-    item("") shouldEqual None
+    anyChar("") shouldEqual None
   }
 
   property("sequencing") {
     val p = for {
-      v1 <- item
-      _ <- item
-      v2 <- item
+      v1 <- anyChar
+      _ <- anyChar
+      v2 <- anyChar
     } yield s"$v1$v2"
 
     "abc".parse(p) shouldEqual Some("ac", "")
@@ -170,7 +170,7 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
   }
 
   property("many1 should fail for empty inputs") {
-    forAll(Gen.oneOf(item, lower, upper, letter, char('f'))) { p =>
+    forAll(Gen.oneOf(anyChar, lower, upper, letter, char('f'))) { p =>
       "".parse(many1(p)) shouldEqual None
     }
   }
