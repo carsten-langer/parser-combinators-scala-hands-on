@@ -15,7 +15,7 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("succeed should always succeed with the result value v") {
     forAll(nonEmptyString, arbitrary[Int]) { (input, v) =>
-      parsers.succeed(v)(input) shouldEqual Some(v, input)
+      parsers.succeed(v)(input) shouldEqual Some((v, input))
     }
   }
 
@@ -25,13 +25,13 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
     }
   }
 
-  property("item should succeed with first char for non empty inputs") {
+  property("anyChar should succeed with first char for non empty inputs") {
     forAll(nonEmptyString) { input =>
-      anyChar(input) shouldEqual Some(input.charAt(0), input.substring(1))
+      anyChar(input) shouldEqual Some((input.charAt(0), input.substring(1)))
     }
   }
 
-  property("item should fail if input is empty") {
+  property("anyChar should fail if input is empty") {
     anyChar("") shouldEqual None
   }
 
@@ -42,20 +42,19 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
       v2 <- anyChar
     } yield s"$v1$v2"
 
-    "abc".parse(p) shouldEqual Some("ac", "")
+    p("abc") shouldEqual Some(("ac", ""))
   }
 
   property("choice") {
     forAll(arbitrary[String]) { input =>
       val p = parsers.fail +++ parsers.succeed(42)
-      input.parse(p) shouldEqual Some(42, input)
+      p(input) shouldEqual Some((42, input))
     }
   }
 
-
   property("digit should succeed on numeric char") {
     forAll(Gen.numChar, Gen.alphaNumStr) { (c, out) =>
-      digit(s"$c$out") shouldEqual Some(c.toInt, out)
+      digit(s"$c$out") shouldEqual Some((c.toInt, out))
     }
   }
 
@@ -67,7 +66,7 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("lower should succeed on lower case char") {
     forAll(Gen.alphaLowerChar, Gen.alphaNumStr) { (c, out) =>
-      lower(s"$c$out") shouldEqual Some(c, out)
+      lower(s"$c$out") shouldEqual Some((c, out))
     }
   }
 
@@ -85,7 +84,7 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("upper should succeed on upper case char") {
     forAll(Gen.alphaUpperChar, Gen.alphaNumStr) { (c, out) =>
-      upper(s"$c$out") shouldEqual Some(c, out)
+      upper(s"$c$out") shouldEqual Some((c, out))
     }
   }
 
@@ -103,7 +102,7 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("letter should succeed on alpha char") {
     forAll(Gen.alphaChar, Gen.alphaNumStr) { (c, out) =>
-      letter(s"$c$out") shouldEqual Some(c, out)
+      letter(s"$c$out") shouldEqual Some((c, out))
     }
   }
 
@@ -115,7 +114,7 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("alphaNum should succeed on alphaNum char") {
     forAll(Gen.alphaNumChar, Gen.alphaNumStr) { (c, out) =>
-      alphaNum(s"$c$out") shouldEqual Some(c, out)
+      alphaNum(s"$c$out") shouldEqual Some((c, out))
     }
   }
 
@@ -127,7 +126,7 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("char should succeed if input starts with specified char") {
     forAll(arbitrary[Char], Gen.alphaNumStr) { (c, out) =>
-      char(c)(s"$c$out") shouldEqual Some(c, out)
+      char(c)(s"$c$out") shouldEqual Some((c, out))
     }
   }
 
@@ -140,14 +139,14 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
   property("string should succeed if input starts with specified string") {
     forAll(arbitrary[String], arbitrary[String]) { (str, out) =>
       val input = s"$str$out"
-      input.parse(string(str)) shouldEqual Some(str, out)
+      string(str)(input) shouldEqual Some((str, out))
     }
   }
 
   property("string should fail if input does not start with specified string") {
     forAll(nonEmptyString, arbitrary[String]) { (str, input) =>
       whenever(input.isEmpty || !input.startsWith(str)) {
-        input.parse(string(str)) shouldEqual None
+        string(str)(input) shouldEqual None
       }
     }
   }
@@ -158,47 +157,46 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
         whenever(out.isEmpty || !out.startsWith(s"$c")) {
           val start = (1 to n).map(_ => c).mkString
           val input = s"$start$out"
-          input.parse(many(char(c))) shouldEqual Some(
-            (1 to n).map(_ => c).toList,
-            out)
+          many(char(c))(input) shouldEqual Some(
+            ((1 to n).map(_ => c).toList, out))
         }
     }
   }
 
   property("many1 should succeed with 'List(a, b, c)' for input 'abcFoo'") {
-    "abcFoo".parse(many1(lower)) shouldEqual Some(List('a', 'b', 'c'), "Foo")
+    many1(lower)("abcFoo") shouldEqual Some((List('a', 'b', 'c'), "Foo"))
   }
 
   property("many1 should fail for empty inputs") {
     forAll(Gen.oneOf(anyChar, lower, upper, letter, char('f'))) { p =>
-      "".parse(many1(p)) shouldEqual None
+      many1(p)("") shouldEqual None
     }
   }
 
   property("ident") {
     forAll(Gen.alphaLowerChar, Gen.alphaNumStr) { (x, xs) =>
-      s"$x$xs".parse(ident) shouldEqual Some(s"$x$xs", "")
+      ident(s"$x$xs") shouldEqual Some((s"$x$xs", ""))
     }
   }
 
   property("ident fail") {
     forAll(Gen.alphaUpperChar, Gen.alphaNumStr) { (x, xs) =>
-      s"$x$xs".parse(ident) shouldEqual None
+      ident(s"$x$xs") shouldEqual None
     }
   }
 
   property("nat") {
-    "123foo".parse(nat) shouldEqual Some(123, "foo")
+    nat("123foo") shouldEqual Some((123, "foo"))
   }
 
   property("nat fail") {
     forAll(Gen.alphaStr) { alphaStr =>
-      alphaStr.parse(nat) shouldEqual None
+      nat(alphaStr) shouldEqual None
     }
   }
 
   property("space") {
-    "   foo".parse(space) shouldEqual Some((), "foo")
+    space("   foo") shouldEqual Some(((), "foo"))
   }
 
 }

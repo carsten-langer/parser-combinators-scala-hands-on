@@ -46,30 +46,41 @@ package object parsers {
     */
   def anyChar: Parser[Char] = input => input.headOption.map((_, input.tail))
 
-  def parse[A](p: Parser[A], input: String): Option[(A, String)] = p(input)
-
-  implicit class Parse(val input: String) extends AnyVal {
-    def parse[A](p: Parser[A]): Option[(A, String)] = parsers.parse(p, input)
-  }
-
   // Sequencing and choice
 
   implicit class ParserCombinators[A](val p: Parser[A]) extends AnyVal {
+
+    /** Sequencing parsers.
+      *
+      * The parser `p.flatMap(f)` fails if `p` fails.
+      * Otherwise `f` will be applied to the result of `p` to create a second parser which will be applied to the remaining unconsumed input.
+      *
+      * @param f a function that creates a parser from a value of type `A`
+      * @tparam B type of the resulting parser
+      * @return a parser of type `B`
+      */
     def flatMap[B](f: A => Parser[B]): Parser[B] =
       input =>
-        input.parse(p) match {
+        p(input) match {
           case None           => fail(input)
-          case Some((v, out)) => out.parse(f(v))
-        }
+          case Some((v, out)) => f(v)(out)
+      }
 
+    /** Returns a parser of type `B` by applying the function `f` to the inner value of this parser.
+      *
+      * @param f a function to apply
+      * @tparam B the type of the resulting parser
+      * @return a parser of type `B`
+      */
     def map[B](f: A => B): Parser[B] = p.flatMap(v => succeed(f(v)))
 
+    /** First is parser is applied. If it fails the a second parser will be applied.
+      *
+      * @param other a parser which will be applied if this parser fails
+      * @return a parser of type `A`
+      */
     def +++(other: Parser[A]): Parser[A] =
-      input =>
-        input.parse(p) match {
-          case None             => input.parse(other)
-          case result @ Some(_) => result
-        }
+      input => p(input).orElse(other(input))
   }
 
   // Derived primitives
