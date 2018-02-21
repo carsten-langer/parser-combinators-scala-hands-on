@@ -34,46 +34,46 @@ package object parsers {
     */
   def fail: Parser[Nothing] = _ => None
 
-  /** The parser `item` fails if the input string is empty or otherwise succeeds with the first character of the input string.
+  /** The parser `anyChar` fails if the input string is empty or otherwise succeeds with the first character of the input string.
     *
     * Usage example:
     *
     * {{{
-    *   item("input_string") == Some(('i', "nput_string"))
+    *   anyChar("input_string") == Some(('i', "nput_string"))
     * }}}
     *
     * @return a parser of type `Char`
     */
-  def item: Parser[Char] = input => input.headOption.map((_, input.tail))
-
-  private def parse[A](p: Parser[A], input: String): Option[(A, String)] =
-    p(input)
-
-  implicit class Parse(val input: String) extends AnyVal {
-
-    /** Syntax for applying a parser to an input string.
-      *
-      * Usage example:
-      *
-      * {{{
-      *   val p: Parser[Char] = ???
-      *   "input_string".parse(p)
-      * }}}
-      *
-      * @param p the parser
-      * @tparam A the type of the parser
-      * @return an optional pair of a result value of type `A` and an output string
-      */
-    def parse[A](p: Parser[A]): Option[(A, String)] = parsers.parse(p, input)
-  }
+  def anyChar: Parser[Char] = input => input.headOption.map((_, input.tail))
 
   // Sequencing and choice
 
   implicit class ParserCombinators[A](val p: Parser[A]) extends AnyVal {
+
+    /** Sequencing parsers.
+      *
+      * The parser `p.flatMap(f)` fails if `p` fails.
+      * Otherwise `f` will be applied to the result of `p` to create a second parser which will be applied to the remaining unconsumed input.
+      *
+      * @param f a function that creates a parser from a value of type `A`
+      * @tparam B type of the resulting parser
+      * @return a parser of type `B`
+      */
     def flatMap[B](f: A => Parser[B]): Parser[B] = ???
 
+    /** Returns a parser of type `B` by applying the function `f` to the inner value of this parser.
+      *
+      * @param f a function to apply
+      * @tparam B the type of the resulting parser
+      * @return a parser of type `B`
+      */
     def map[B](f: A => B): Parser[B] = ???
 
+    /** First is parser is applied. If it fails the a second parser will be applied.
+      *
+      * @param other a parser which will be applied if this parser fails
+      * @return a parser of type `A`
+      */
     def +++(other: Parser[A]): Parser[A] = ???
   }
 
