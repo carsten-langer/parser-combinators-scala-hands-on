@@ -85,29 +85,162 @@ package object parsers {
 
   // Derived primitives
 
-  def sat(predicate: Char => Boolean): Parser[Char] = ???
+  /** Returns a parser for a single character that satisfies a given predicate `p`
+    *
+    * @param p the predicate
+    * @return a Parser of type `Char`
+    */
+  def sat(p: Char => Boolean): Parser[Char] = ???
 
+  /** Parses a single digit.
+    *
+    * Usage example:
+    *
+    * {{{
+    *   digit("123") == Some(('1', "23"))
+    *
+    *   digit("abc") == None
+    * }}}
+    *
+    */
   val digit: Parser[Char] = ???
 
+  /** Parses a lower case character.
+    *
+    * Usage example:
+    *
+    * {{{
+    *   lower("abc") == Some(('a', "bc"))
+    *
+    *   lower("ABC") == None
+    * }}}
+    *
+    */
   val lower: Parser[Char] = ???
 
+  /** Parses an upper case character.
+    *
+    * Usage example:
+    *
+    * {{{
+    *   upper("ABC") == Some(('A', "BC"))
+    *
+    *   upper("abc") == None
+    * }}}
+    *
+    */
   val upper: Parser[Char] = ???
 
+  /** Parses any letter.
+    *
+    * Usage example:
+    *
+    * {{{
+    *   letter("abc") == Some(('a', "bc"))
+    *
+    *   letter("123") == None
+    * }}}
+    *
+    */
   val letter: Parser[Char] = ???
 
+  /** Parses any letter or digit.
+    *
+    * Usage example:
+    *
+    * {{{
+    *   alphaNum("abc") == Some(('a', "bc"))
+    *
+    *   alphaNum("123") == Some(('1', "23"))
+    *
+    *   alphaNum(":abc") == None
+    * }}}
+    *
+    * @return a parser of type `Char`
+    */
   val alphaNum: Parser[Char] = ???
 
+  /** Parses a specific character.
+    *
+    * Usage example:
+    *
+    * {{{
+    *   char('a')("abc") == Some(('a', "bc"))
+    *
+    *   char('z')("abc") == None
+    * }}}
+    *
+    * @param c a specific character
+    * @return a parser of type `Char`
+    */
   def char(c: Char): Parser[Char] = ???
 
+  /** Parses a specific string.
+    *
+    * Usage example:
+    *
+    * {{{
+    *   string("foo")("foobar") == Some(("foo", "bar"))
+    *
+    *   string("foo")("abc") == None
+    * }}}
+    *
+    *
+    * @param str a specific string
+    * @return a parser of type `String`
+    */
   def string(str: String): Parser[String] = ???
 
+  /** Applies a parser zero to many times until it fails and combines the results in a list.
+    *
+    * Usage example:
+    *
+    * {{{
+    *   many(digit)("123abc") == Some((List('1', '2', '3'), "abc"))
+    *
+    *   many(digit)("abc) == Some((Nil, "abc"))
+    * }}}
+    *
+    * @param p a parser to apply many times
+    * @tparam A the type of the parser
+    * @return a parsers of type `List[A]`
+    */
   def many[A](p: Parser[A]): Parser[List[A]] = ???
 
+  /** Applies a parser at least once to many times until it fails and combines the results in a list.
+    *
+    * Usage example:
+    *
+    * {{{
+    *   many1(digit)("123abc") == Some((List('1', '2', '3'), "abc"))
+    *
+    *   many1(digit)("abc) == None
+    * }}}
+    *
+    * @param p a parser to apply one to many times
+    * @tparam A the type of the parser
+    * @return a parser of type `List[A]`
+    */
   def many1[A](p: Parser[A]): Parser[List[A]] = ???
 
-  val ident: Parser[String] = ???
-
+  /** Parses at least one or more digits and converts them to a natural number of type `Int`.
+    *
+    * {{{
+    *   nat("123foo") == Some((123, "foo"))
+    *
+    *   nat("abc") == None
+    * }}}
+    */
   val nat: Parser[Int] = ???
 
+  /** Parses zero or more spaces, tabs or newline characters.
+    *
+    * {{{
+    *   space(" \t abc") == Some(((), "abc"))
+    *
+    *   space("abc") == Some((), "abc"))
+    * }}}
+    *
+    */
   val space: Parser[Unit] = ???
 }

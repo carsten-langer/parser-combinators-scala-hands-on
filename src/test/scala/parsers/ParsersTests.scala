@@ -173,18 +173,6 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
     }
   }
 
-  property("ident") {
-    forAll(Gen.alphaLowerChar, Gen.alphaNumStr) { (x, xs) =>
-      ident(s"$x$xs") shouldEqual Some((s"$x$xs", ""))
-    }
-  }
-
-  property("ident fail") {
-    forAll(Gen.alphaUpperChar, Gen.alphaNumStr) { (x, xs) =>
-      ident(s"$x$xs") shouldEqual None
-    }
-  }
-
   property("nat") {
     nat("123foo") shouldEqual Some((123, "foo"))
   }
@@ -197,6 +185,7 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("space") {
     space("   foo") shouldEqual Some(((), "foo"))
+    space("   \t foo") shouldEqual Some(((), "foo"))
+    space("   \n foo") shouldEqual Some(((), "foo"))
   }
-
 }
