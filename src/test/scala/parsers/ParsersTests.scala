@@ -9,9 +9,10 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   private val nonEmptyString =
     Gen.nonEmptyListOf(arbitrary[Char]).map(_.mkString)
-  private val nonAlphaChar = arbitrary[Char].suchThat(c => !c.isLetter)
-  private val nonAlphaNumChar =
-    arbitrary[Char].suchThat(c => !c.isLetterOrDigit)
+  private val noCaseChars = (32 to 2000).map(_.toChar).filter(c => !c.isLower && !c.isUpper && !c.isLetter)
+  private val nonAlphaChar = Gen.oneOf(noCaseChars)
+  private val nonAlphaNumChars = (32 to 2000).map(_.toChar).filter(c => !c.isLetterOrDigit)
+  private val nonAlphaNumChar = Gen.oneOf(nonAlphaNumChars)
 
   property("succeed should always succeed with the result value v") {
     forAll(nonEmptyString, arbitrary[Int]) { (input, v) =>
