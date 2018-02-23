@@ -9,9 +9,10 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   private val nonEmptyString =
     Gen.nonEmptyListOf(arbitrary[Char]).map(_.mkString)
-  private val nonAlphaChar = arbitrary[Char].suchThat(c => !c.isLetter)
-  private val nonAlphaNumChar =
-    arbitrary[Char].suchThat(c => !c.isLetterOrDigit)
+  private val noCaseChars = (32 to 2000).map(_.toChar).filter(c => !c.isLower && !c.isUpper && !c.isLetter)
+  private val nonAlphaChar = Gen.oneOf(noCaseChars)
+  private val nonAlphaNumChars = (32 to 2000).map(_.toChar).filter(c => !c.isLetterOrDigit)
+  private val nonAlphaNumChar = Gen.oneOf(nonAlphaNumChars)
 
   property("succeed should always succeed with the result value v") {
     forAll(nonEmptyString, arbitrary[Int]) { (input, v) =>
@@ -20,14 +21,14 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
   }
 
   property("fail should always fail") {
-    forAll(arbitrary[String]) { input =>
+    forAll { (input: String)  =>
       parsers.fail(input) shouldEqual None
     }
   }
 
   property("anyChar should succeed with first char for non empty inputs") {
     forAll(nonEmptyString) { input =>
-      anyChar(input) shouldEqual Some((input.charAt(0), input.substring(1)))
+      anyChar(input) shouldEqual Some((input.head, input.tail))
     }
   }
 
@@ -47,8 +48,10 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("choice") {
     forAll(arbitrary[String]) { input =>
-      val p = parsers.fail +++ parsers.succeed(42)
-      p(input) shouldEqual Some((42, input))
+      val p1 = parsers.fail +++ parsers.succeed(42)
+      val p2 = parsers.succeed(42) +++ parsers.fail
+      p1(input) shouldEqual Some((42, input))
+      p2(input) shouldEqual Some((42, input))
     }
   }
 
@@ -132,7 +135,7 @@ class ParsersTests extends PropSpec with PropertyChecks with Matchers {
 
   property("char should fail if input does not starts with specified char") {
     forAll(nonEmptyString) { input =>
-      char((input.charAt(0).toInt + 1).toChar)(input) shouldEqual None
+      char((input.head.toInt + 1).toChar)(input) shouldEqual None
     }
   }
 
