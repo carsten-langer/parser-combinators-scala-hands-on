@@ -24,14 +24,14 @@ object ArithmeticExpressions {
     * }}}
     *
     */
-  lazy val expr: Parser[Int] = ???
+  lazy val expr: Parser[Int] = fail
 
   /** Parses terms according to:
     *
     * term ::= factor (* term | \epsilon)
     *
     */
-  lazy val term: Parser[Int] = ???
+  lazy val term: Parser[Int] = fail
 
   /** Parses factors according to:
     *
@@ -39,7 +39,7 @@ object ArithmeticExpressions {
     * nat ::= 0 | 1 | 2 | ...
     *
     */
-  lazy val factor: Parser[Int] = ???
+  lazy val factor: Parser[Int] = fail
 
   /** Evaluates an input string to its integer representation.
     *
