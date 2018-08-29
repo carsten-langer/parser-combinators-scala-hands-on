@@ -274,7 +274,7 @@ package object parsers {
     * @tparam A the type of the parser
     * @return a parser of type `A`
     */
-  def token[A](p: Parser[A]): Parser[A] = ???
+  def token[A](p: Parser[A]): Parser[A] = fail
 
   /** Ignores spaces around a natural number.
     *
@@ -283,7 +283,7 @@ package object parsers {
     * }}}
     *
     */
-  val natural: Parser[Int] = ???
+  val natural: Parser[Int] = fail
 
   /** Ignores spaces around a specific string.
     *
@@ -294,5 +294,5 @@ package object parsers {
     * @param s a specific string
     * @return a parser of type `String`
     */
-  def symbol(s: String): Parser[String] = ???
+  def symbol(s: String): Parser[String] = fail
 }

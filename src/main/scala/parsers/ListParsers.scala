@@ -11,5 +11,5 @@ object ListParsers {
     * }}}
     *
     */
-  val nonEmptyIntList: Parser[List[Int]] = ???
+  val nonEmptyIntList: Parser[List[Int]] = fail
 }
