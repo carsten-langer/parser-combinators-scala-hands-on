@@ -20,7 +20,7 @@ package object parsers {
     * @tparam A type of the result value
     * @return a parser of type `A`
     */
-  def succeed[A](v: A): Parser[A] = ???
+  def succeed[A](v: A): Parser[A] = fail
 
   /** The parser `fail` always fails, regardless of the contents of the input string.
     *
@@ -32,7 +32,7 @@ package object parsers {
     *
     * @return an empty parser
     */
-  def fail: Parser[Nothing] = ???
+  def fail: Parser[Nothing] = throw new Exception("not implemented")
 
   /** The parser `anyChar` fails if the input string is empty or otherwise succeeds with the first character of the input string.
     *
@@ -44,5 +44,5 @@ package object parsers {
     *
     * @return a parser of type `Char`
     */
-  def anyChar: Parser[Char] = ???
+  def anyChar: Parser[Char] = fail
 }
