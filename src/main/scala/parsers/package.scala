@@ -59,7 +59,7 @@ package object parsers {
       * @tparam B type of the resulting parser
       * @return a parser of type `B`
       */
-    def flatMap[B](f: A => Parser[B]): Parser[B] = ???
+    def flatMap[B](f: A => Parser[B]): Parser[B] = fail
 
     /** Returns a parser of type `B` by applying the function `f` to the inner value of this parser.
       *
@@ -67,14 +67,14 @@ package object parsers {
       * @tparam B the type of the resulting parser
       * @return a parser of type `B`
       */
-    def map[B](f: A => B): Parser[B] = ???
+    def map[B](f: A => B): Parser[B] = fail
 
     /** First is parser is applied. If it fails the a second parser will be applied.
       *
       * @param other a parser which will be applied if this parser fails
       * @return a parser of type `A`
       */
-    def +++(other: Parser[A]): Parser[A] = ???
+    def +++(other: Parser[A]): Parser[A] = fail
   }
 
 }
