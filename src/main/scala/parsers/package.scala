@@ -87,10 +87,12 @@ package object parsers {
 
   /** Returns a parser for a single character that satisfies a given predicate `p`
     *
+    * Hint: Try to use the basic parsers and sequencing operators implemented above.
+    *
     * @param p the predicate
     * @return a Parser of type `Char`
     */
-  def sat(p: Char => Boolean): Parser[Char] = ???
+  def sat(p: Char => Boolean): Parser[Char] = fail
 
   /** Parses a single digit.
     *
@@ -102,8 +104,10 @@ package object parsers {
     *   digit("abc") == None
     * }}}
     *
+    * Hint: Use the function `sat` defined above.
+    *
     */
-  val digit: Parser[Char] = ???
+  val digit: Parser[Char] = fail
 
   /** Parses a lower case character.
     *
@@ -116,7 +120,7 @@ package object parsers {
     * }}}
     *
     */
-  val lower: Parser[Char] = ???
+  val lower: Parser[Char] = fail
 
   /** Parses an upper case character.
     *
@@ -129,7 +133,7 @@ package object parsers {
     * }}}
     *
     */
-  val upper: Parser[Char] = ???
+  val upper: Parser[Char] = fail
 
   /** Parses any letter.
     *
@@ -142,7 +146,7 @@ package object parsers {
     * }}}
     *
     */
-  val letter: Parser[Char] = ???
+  val letter: Parser[Char] = fail
 
   /** Parses any letter or digit.
     *
@@ -158,7 +162,7 @@ package object parsers {
     *
     * @return a parser of type `Char`
     */
-  val alphaNum: Parser[Char] = ???
+  val alphaNum: Parser[Char] = fail
 
   /** Parses a specific character.
     *
@@ -173,7 +177,7 @@ package object parsers {
     * @param c a specific character
     * @return a parser of type `Char`
     */
-  def char(c: Char): Parser[Char] = ???
+  def char(c: Char): Parser[Char] = fail
 
   /** Parses a specific string.
     *
@@ -189,7 +193,7 @@ package object parsers {
     * @param str a specific string
     * @return a parser of type `String`
     */
-  def string(str: String): Parser[String] = ???
+  def string(str: String): Parser[String] = fail
 
   /** Applies a parser zero to many times until it fails and combines the results in a list.
     *
@@ -205,7 +209,7 @@ package object parsers {
     * @tparam A the type of the parser
     * @return a parsers of type `List[A]`
     */
-  def many[A](p: Parser[A]): Parser[List[A]] = ???
+  def many[A](p: Parser[A]): Parser[List[A]] = fail
 
   /** Applies a parser at least once to many times until it fails and combines the results in a list.
     *
@@ -221,7 +225,7 @@ package object parsers {
     * @tparam A the type of the parser
     * @return a parser of type `List[A]`
     */
-  def many1[A](p: Parser[A]): Parser[List[A]] = ???
+  def many1[A](p: Parser[A]): Parser[List[A]] = fail
 
   /** Parses at least one or more digits and converts them to a natural number of type `Int`.
     *
@@ -231,7 +235,7 @@ package object parsers {
     *   nat("abc") == None
     * }}}
     */
-  val nat: Parser[Int] = ???
+  val nat: Parser[Int] = fail
 
   /** Parses zero or more spaces, tabs or newline characters.
     *
@@ -242,5 +246,5 @@ package object parsers {
     * }}}
     *
     */
-  val space: Parser[Unit] = ???
+  val space: Parser[Unit] = fail
 }
